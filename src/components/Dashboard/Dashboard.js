@@ -21,6 +21,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems, secondaryListItems } from "./listItems";
 import LogoutButton from "./listItems";
 import Chart from "./Chart";
+import Projects from "./Projects";
 import Name from "./Name";
 import Orders from "./Orders";
 import { useAuth } from "../../contexts/AuthContext";
@@ -177,10 +178,10 @@ function DashboardContent() {
                     p: 2,
                     display: "flex",
                     flexDirection: "column",
-                    height: 240,
                   }}
                 >
-                  <Chart />
+                  {/* <Chart /> */}
+                  <Projects />
                 </Paper>
               </Grid>
               {/* Recent Deposits */}

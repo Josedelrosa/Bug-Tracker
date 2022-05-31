@@ -30,6 +30,7 @@ export function AuthProvider({ children }) {
   const [userName, setUserName] = useState([]);
   const [loading, setLoading] = useState(true);
   const [allUsers, setAllUsers] = useState([]);
+  const [projects, setProjects] = useState([]);
 
   const signup = async (email, password, firstName, lastName) => {
     // return auth.createUserWithEmailAndPassword(email, password);
@@ -62,6 +63,20 @@ export function AuthProvider({ children }) {
     // return currentUser.updatePassword(password);
     await updatePassword(currentUser, password);
   };
+  // create the project to add members
+  const createProjects = async (projectName, projectDescription, members) => {
+    // const [a] = members;
+    await setDoc(doc(db, "projects", projectName), {
+      projectDescription,
+      members,
+    });
+  };
+  const getProjects = async () => {
+    const querySnapshot = await getDocs(collection(db, "projects"));
+    setProjects(
+      querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    );
+  };
 
   // useEffect(() => {
   //   const getUsers = async () => {
@@ -78,6 +93,7 @@ export function AuthProvider({ children }) {
       if (user) {
         const uid = user.uid;
         const usersCollectionRef = doc(db, "users", uid);
+
         const getUsers = async () => {
           const data = await getDoc(usersCollectionRef);
           setUserName(data.data());
@@ -85,11 +101,27 @@ export function AuthProvider({ children }) {
 
         getUsers();
 
+        // const getProjects = async () => {
+        //   const querySnapshot = await getDocs(collection(db, "projects"));
+        //   setProjects(
+        //     querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        //   );
+        // };
+        getProjects();
+
         const getAllUsers = async () => {
           const querySnapshot = await getDocs(collection(db, "users"));
           setAllUsers(
             querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
           );
+
+          // this will order users by name
+          setAllUsers((data) => {
+            const dataToSort = [...data];
+            dataToSort.sort((a, b) => a.firstName.localeCompare(b.firstName));
+            return dataToSort;
+          });
+
           // querySnapshot.forEach((doc) => {
           //   // doc.data() is never undefined for query doc snapshots
           //   console.log(doc.id, " => ", doc.data());
@@ -97,6 +129,7 @@ export function AuthProvider({ children }) {
         };
         getAllUsers();
       }
+
       setLoading(false);
     });
     return unsubscribe;
@@ -105,6 +138,7 @@ export function AuthProvider({ children }) {
     currentUser,
     userName,
     allUsers,
+    projects,
     setAllUsers,
     login,
     logout,
@@ -112,6 +146,8 @@ export function AuthProvider({ children }) {
     resetPassword,
     updateEmails,
     updatePasswords,
+    createProjects,
+    getProjects,
   };
   return (
     <AuthContext.Provider value={value}>

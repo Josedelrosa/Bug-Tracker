@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import Link from "@mui/material/Link";
+import Alert from "@mui/material/Alert";
 import Typography from "@mui/material/Typography";
 import Title from "./Title";
 import Modal from "@mui/material/Modal";
@@ -13,9 +14,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import { Button } from "@mui/material";
 import { useAuth } from "../../contexts/AuthContext";
-import { db } from "../../firebase";
-import { doc, getDoc } from "firebase/firestore";
-// TODO handle button submit by using database to post project data
+
 function preventDefault(event) {
   event.preventDefault();
 }
@@ -32,41 +31,70 @@ const style = {
 };
 
 export default function Deposits() {
-  const { currentUser, userName, allUsers, setAllUsers } = useAuth();
+  const { userName, allUsers, createProjects, getProjects } = useAuth();
   // const usersCollectionRef = doc(db, "users", currentUser.uid);
   // const [users, setUsers] = useState([]);
+  const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
   const projectNameRef = useRef();
   const projectDescriptionRef = useRef();
-  const [checked, setChecked] = React.useState([]);
+  const [checked, setChecked] = useState([]);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
+    setError("");
     setChecked([]);
   };
 
   const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
+    const fullname = value.firstName + " " + value.lastName;
+    const currentIndex = checked.indexOf(fullname);
     const newChecked = [...checked];
 
     if (currentIndex === -1) {
-      newChecked.push(value);
+      newChecked.push(fullname);
     } else {
       newChecked.splice(currentIndex, 1);
     }
 
     setChecked(newChecked);
   };
-  useEffect(() => {
-    const sortByName = () => {
-      setAllUsers((data) => {
-        const dataToSort = [...data];
-        dataToSort.sort((a, b) => a.firstName.localeCompare(b.firstName));
-        return dataToSort;
-      });
-    };
-    sortByName();
-  }, []);
+  console.log(checked);
+  console.log(checked.length);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (checked.length === 0) {
+      return setError("No members where selected");
+    }
+
+    try {
+      setError("");
+      await createProjects(
+        projectNameRef.current.value,
+        projectDescriptionRef.current.value,
+        checked
+      );
+      await getProjects();
+      handleClose();
+    } catch (error) {
+      setError("Failed to create project");
+      console.log(error);
+    }
+  }
+
+  // the sort by name is not working on start up
+
+  // useEffect(() => {
+  //   const sortByName = () => {
+  //     setAllUsers((data) => {
+  //       const dataToSort = [...data];
+  //       dataToSort.sort((a, b) => a.firstName.localeCompare(b.firstName));
+  //       return dataToSort;
+  //     });
+  //   };
+  //   sortByName();
+  // }, []);
 
   // console.log(checked);
   // useEffect(() => {
@@ -108,10 +136,11 @@ export default function Deposits() {
                 noValidate
                 autoComplete="off"
               >
-                <div>
-                  <h5>Create New Project</h5>
-                </div>
-                <br />
+                {error && (
+                  <Alert variant="outlined" severity="error">
+                    {error}
+                  </Alert>
+                )}
                 <div>
                   <h4>Project Name</h4>
                   <TextField
@@ -121,6 +150,7 @@ export default function Deposits() {
                     rows={1}
                     defaultValue=""
                     inputRef={projectNameRef}
+                    required
                   />
                 </div>
                 <div>
@@ -132,17 +162,11 @@ export default function Deposits() {
                     rows={4}
                     defaultValue=""
                     inputRef={projectDescriptionRef}
+                    required
                   />
                 </div>
                 <div>
                   <h4>Add Team Members</h4>
-                  {/* <TextField
-                    id="outlined-multiline-static"
-                    label="Project Description"
-                    multiline
-                    rows={3}
-                    defaultValue=""
-                  /> */}
                   <List
                     dense
                     sx={{
@@ -156,6 +180,7 @@ export default function Deposits() {
                   >
                     {allUsers.map((value) => {
                       const labelId = `checkbox-list-secondary-label-${value.id}`;
+                      const fullname = value.firstName + " " + value.lastName;
                       return (
                         <ListItem
                           key={value.id}
@@ -163,7 +188,7 @@ export default function Deposits() {
                             <Checkbox
                               edge="end"
                               onChange={handleToggle(value)}
-                              checked={checked.indexOf(value) !== -1}
+                              checked={checked.indexOf(fullname) !== -1}
                               inputProps={{ "aria-labelledby": labelId }}
                             />
                           }
@@ -180,7 +205,13 @@ export default function Deposits() {
                     })}
                   </List>
                 </div>
-                <Button variant="contained">Submit</Button>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </Button>
               </Box>
             </Typography>
           </Box>
