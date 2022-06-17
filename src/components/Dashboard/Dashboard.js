@@ -20,9 +20,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems, secondaryListItems } from "./listItems";
 import LogoutButton from "./listItems";
-import Chart from "./Chart";
 import Projects from "./Projects";
-import Name from "./Name";
+import AccountMenu from "./AccountMenu";
 import Orders from "./Orders";
 import { useAuth } from "../../contexts/AuthContext";
 function Copyright(props) {
@@ -133,6 +132,7 @@ function DashboardContent() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+            <AccountMenu />
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -172,7 +172,7 @@ function DashboardContent() {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
+              <Grid item xs={12}>
                 <Paper
                   sx={{
                     p: 2,
@@ -185,7 +185,7 @@ function DashboardContent() {
                 </Paper>
               </Grid>
               {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
+              {/* <Grid item xs={12} md={4} lg={3}>
                 <Paper
                   sx={{
                     p: 2,
@@ -196,7 +196,7 @@ function DashboardContent() {
                 >
                   <Name />
                 </Paper>
-              </Grid>
+              </Grid> */}
               {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>

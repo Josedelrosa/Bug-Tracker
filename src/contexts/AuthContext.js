@@ -13,6 +13,7 @@ import {
   getDoc,
   setDoc,
   doc,
+  deleteDoc,
   getDocs,
   collection,
   orderBy,
@@ -32,6 +33,7 @@ export function AuthProvider({ children }) {
   const [allUsers, setAllUsers] = useState([]);
   const [projects, setProjects] = useState([]);
 
+  // add email to signup
   const signup = async (email, password, firstName, lastName) => {
     // return auth.createUserWithEmailAndPassword(email, password);
     const result = await createUserWithEmailAndPassword(auth, email, password);
@@ -70,6 +72,9 @@ export function AuthProvider({ children }) {
       projectDescription,
       members,
     });
+  };
+  const deleteProjects = async (projectName) => {
+    await deleteDoc(doc(db, "projects", projectName));
   };
   const getProjects = async () => {
     const querySnapshot = await getDocs(collection(db, "projects"));
@@ -148,6 +153,7 @@ export function AuthProvider({ children }) {
     updatePasswords,
     createProjects,
     getProjects,
+    deleteProjects,
   };
   return (
     <AuthContext.Provider value={value}>

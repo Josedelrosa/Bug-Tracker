@@ -109,8 +109,8 @@ export default function LogoutButton() {
   const history = useNavigate();
 
   async function handleLogout() {
-    setError("");
     try {
+      setError("");
       await logout();
       history("/login");
     } catch (error) {

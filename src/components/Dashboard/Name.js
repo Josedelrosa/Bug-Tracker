@@ -39,6 +39,7 @@ export default function Deposits() {
   const projectNameRef = useRef();
   const projectDescriptionRef = useRef();
   const [checked, setChecked] = useState([]);
+  const [loading, setLoading] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
@@ -59,17 +60,19 @@ export default function Deposits() {
 
     setChecked(newChecked);
   };
-  console.log(checked);
-  console.log(checked.length);
+  // console.log(checked);
+  // console.log(checked.length);
 
   async function handleSubmit(e) {
     e.preventDefault();
+
     if (checked.length === 0) {
       return setError("No members where selected");
     }
 
     try {
       setError("");
+      setLoading(true);
       await createProjects(
         projectNameRef.current.value,
         projectDescriptionRef.current.value,
@@ -81,6 +84,7 @@ export default function Deposits() {
       setError("Failed to create project");
       console.log(error);
     }
+    setLoading(false);
   }
 
   // the sort by name is not working on start up
