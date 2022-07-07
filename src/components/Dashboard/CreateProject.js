@@ -15,6 +15,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { Button } from "@mui/material";
 import { useAuth } from "../../contexts/AuthContext";
 import AddIcon from "@mui/icons-material/Add";
+import ProjectMembers from "./ProjectMembers";
 function preventDefault(event) {
   event.preventDefault();
 }
@@ -48,18 +49,18 @@ export default function CreateProject() {
   };
 
   const handleToggle = (value) => () => {
-    const fullname = value.firstName + " " + value.lastName;
-    const currentIndex = checked.indexOf(fullname);
+    const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
-
+    console.log(checked);
     if (currentIndex === -1) {
-      newChecked.push(fullname);
+      newChecked.push(value);
     } else {
       newChecked.splice(currentIndex, 1);
     }
-
+    // console.log(value);
     setChecked(newChecked);
   };
+  // console.log(allUsers);
   // console.log(checked);
   // console.log(checked.length);
 
@@ -158,17 +159,14 @@ export default function CreateProject() {
                           <Checkbox
                             edge="end"
                             onChange={handleToggle(value)}
-                            checked={checked.indexOf(fullname) !== -1}
+                            checked={checked.indexOf(value) !== -1}
                             inputProps={{ "aria-labelledby": labelId }}
                           />
                         }
                         disablePadding
                       >
                         <ListItemButton>
-                          <ListItemText
-                            id={labelId}
-                            primary={`${value.firstName} ${value.lastName}`}
-                          />
+                          <ListItemText id={labelId} primary={`${fullname}`} />
                         </ListItemButton>
                       </ListItem>
                     );
