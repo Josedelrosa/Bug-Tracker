@@ -16,9 +16,7 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import { useState } from "react";
@@ -84,7 +82,6 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
-    projectNames,
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -342,8 +339,7 @@ export default function Projects() {
                         <Link
                           color="primary"
                           underline="none"
-                          href="#"
-                          onClick={() => console.log(row.id)}
+                          to={`/dashboard/${row.id}`}
                         >
                           {row.id}
                         </Link>
@@ -351,7 +347,18 @@ export default function Projects() {
                       <TableCell align="left">
                         {row.projectDescription}
                       </TableCell>
-                      <TableCell align="left">{format(row.members)}</TableCell>
+                      <TableCell align="left">
+                        {format(
+                          row.members.map(
+                            (value) => value.firstName + " " + value.lastName
+                          )
+                        )}
+                      </TableCell>
+                      {/* {console.log(
+                        row.members.map(
+                          (value) => value.firstName + " " + value.lastName
+                        )
+                      )} */}
                     </TableRow>
                   );
                 })}
