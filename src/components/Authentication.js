@@ -9,7 +9,7 @@ import PrivateRoute from "./PrivateRoute";
 import ForgotPassword from "./ForgotPassword";
 import UpdateProfile from "./UpdateProfile";
 import Dashboard from "./Dashboard/Dashboard";
-
+import SingleProject from "./Dashboard/SingleProject";
 export default function Authentication() {
   return (
     <>
@@ -37,6 +37,14 @@ export default function Authentication() {
               element={
                 <PrivateRoute redirectTo="/login">
                   <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/dashboard/:id"
+              element={
+                <PrivateRoute redirectTo="/login">
+                  <SingleProject />
                 </PrivateRoute>
               }
             />
