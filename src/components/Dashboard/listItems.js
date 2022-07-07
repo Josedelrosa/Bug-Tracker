@@ -12,27 +12,24 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext.js";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 
-// const { logout } = useAuth();
-// const history = useNavigate();
-
-// async function handleLogout() {
-//   try {
-//     await logout();
-//     history("/login");
-//   } catch (error) {
-//     setError("Failed to log out");
-//   }
-// }
+const navLinkStyles = ({ isActive }) => {
+  return {
+    fontWeight: isActive ? "bold" : "normal",
+    textDecoration: isActive ? "none" : "underline",
+  };
+};
 export const mainListItems = (
   <div>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
+    <NavLink to={"/dashboard"} style={navLinkStyles}>
+      <ListItem button>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItem>
+    </NavLink>
     <ListItem button>
       <ListItemIcon>
         <ShoppingCartIcon />
@@ -81,26 +78,6 @@ export const secondaryListItems = (
       </ListItemIcon>
       <ListItemText primary="Year-end sale" />
     </ListItem>
-    {/* <ListItem
-      button
-      onClick={() => {
-        alert("sup");
-      }}
-      sx={{
-        bgcolor: "#B23B3B",
-        width: "70%",
-        borderRadius: "12px",
-        ml: "15%",
-        "&.MuiButtonBase-root:hover": {
-          bgcolor: "#B23B3B",
-        },
-      }}
-    >
-      <ListItemIcon>
-        <LogoutIcon sx={{ color: "#FFFFFF" }} />
-      </ListItemIcon>
-      <ListItemText primary="LOGOUT" sx={{ color: "#FFFFFF" }} />
-    </ListItem> */}
   </div>
 );
 export default function LogoutButton() {
