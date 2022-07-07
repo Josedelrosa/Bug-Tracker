@@ -18,6 +18,9 @@ import {
   collection,
   orderBy,
   query,
+  updateDoc,
+  arrayRemove,
+  arrayUnion,
 } from "firebase/firestore";
 
 const AuthContext = React.createContext();
@@ -32,7 +35,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [allUsers, setAllUsers] = useState([]);
   const [projects, setProjects] = useState([]);
-
+  const [singleProject, setSingleProject] = useState([]);
   // add email to signup
   const signup = async (email, password, firstName, lastName) => {
     // return auth.createUserWithEmailAndPassword(email, password);
@@ -40,6 +43,7 @@ export function AuthProvider({ children }) {
     await setDoc(doc(db, "users", result.user.uid), {
       firstName,
       lastName,
+      email,
     });
   };
   const login = async (email, password) => {
@@ -81,6 +85,26 @@ export function AuthProvider({ children }) {
     setProjects(
       querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
     );
+  };
+  const getSingleProject = async (projectName) => {
+    const docRef = doc(db, "cities", projectName);
+    const docSnap = await getDoc(docRef);
+    setSingleProject(docSnap.data());
+    //not used
+  };
+
+  const deleteMembers = async (projectName, memberId) => {
+    const projectRef = doc(db, "projects", projectName);
+    await updateDoc(projectRef, {
+      members: arrayRemove(memberId),
+    });
+  };
+
+  const addMembers = async (projectName, members) => {
+    const projectRef = doc(db, "projects", projectName);
+    await updateDoc(projectRef, {
+      members,
+    });
   };
 
   // useEffect(() => {
@@ -144,6 +168,7 @@ export function AuthProvider({ children }) {
     userName,
     allUsers,
     projects,
+    singleProject,
     setAllUsers,
     login,
     logout,
@@ -154,6 +179,9 @@ export function AuthProvider({ children }) {
     createProjects,
     getProjects,
     deleteProjects,
+    getSingleProject,
+    deleteMembers,
+    addMembers,
   };
   return (
     <AuthContext.Provider value={value}>
