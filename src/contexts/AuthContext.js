@@ -21,6 +21,8 @@ import {
   updateDoc,
   arrayRemove,
   arrayUnion,
+  addDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 
 const AuthContext = React.createContext();
@@ -36,6 +38,9 @@ export function AuthProvider({ children }) {
   const [allUsers, setAllUsers] = useState([]);
   const [projects, setProjects] = useState([]);
   const [singleProject, setSingleProject] = useState([]);
+  const [tickets, setTickets] = useState([]);
+  const [singleTicket, setSingleTicket] = useState([]);
+  const [currentUserTickets, setCurrentUserTickets] = useState([]);
   // add email to signup
   const signup = async (email, password, firstName, lastName) => {
     // return auth.createUserWithEmailAndPassword(email, password);
@@ -79,6 +84,21 @@ export function AuthProvider({ children }) {
   };
   const deleteProjects = async (projectName) => {
     await deleteDoc(doc(db, "projects", projectName));
+
+    // add this to later
+    // const subcolRef = collection(
+    //   db,
+    //   "parentCollectionTitle",
+    //   "parentDocId",
+    //   "subcollectionTitle"
+    // );
+    // const subcolSnapshot = await getDocs(subcollectionRef);
+
+    // if (!subcolSnapshot.empty) {
+    //   console.log("subcol does exists!");
+    // } else {
+    //   console.log("subcol does NOT exist!");
+    // }
   };
   const getProjects = async () => {
     const querySnapshot = await getDocs(collection(db, "projects"));
@@ -107,6 +127,101 @@ export function AuthProvider({ children }) {
     });
   };
 
+  const addTickets = async (
+    projectName,
+    ticketName,
+    ticketDescription,
+    time,
+    members,
+    type,
+    priority,
+    status,
+    createdBy,
+    userId,
+    ticketId
+  ) => {
+    // await addDoc(
+    //   collection(db, `projects/${projectName}/tickets`, ticketName),
+    //   {
+    //     ticketDescription,
+    //   }
+    // );
+
+    // const messageRef = doc(db, `projects/${projectName}/tickets`, ticketName);
+
+    const docRef = doc(db, "projects", projectName);
+    const colRef = doc(docRef, "tickets", ticketId);
+    await setDoc(colRef, {
+      projectName,
+      ticketName,
+      ticketDescription,
+      time,
+      members,
+      type,
+      priority,
+      status,
+      createdBy,
+      userId,
+    });
+  };
+  const deleteTickets = async (projectName, ticketId) => {
+    const docRef = doc(db, "projects", projectName);
+    const colRef = doc(docRef, "tickets", ticketId);
+    await deleteDoc(colRef);
+  };
+
+  const getTickets = async (projectName) => {
+    const querySnapshot = await getDocs(
+      collection(db, "projects", projectName, "tickets")
+    );
+    setTickets(
+      querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    );
+  };
+  const addUserTickets = async (
+    projectName,
+    ticketName,
+    ticketDescription,
+    time,
+    members,
+    type,
+    priority,
+    status,
+    createdBy,
+    userId,
+    ticketId
+  ) => {
+    const docRef = doc(db, "users", userId);
+    const colRef = doc(docRef, "tickets", ticketId);
+    await setDoc(colRef, {
+      projectName,
+      ticketName,
+      ticketDescription,
+      time,
+      members,
+      type,
+      priority,
+      status,
+      createdBy,
+      createdAt: serverTimestamp(),
+    });
+  };
+
+  const getUserTickets = async (userID) => {
+    const querySnapshot = await getDocs(
+      collection(db, "users", userID, "tickets")
+    );
+    setCurrentUserTickets(
+      querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    );
+  };
+
+  const deleteUserTickets = async (ticketId, userId) => {
+    const docRefUser = doc(db, "users", userId);
+    const colRefUser = doc(docRefUser, "tickets", ticketId);
+    await deleteDoc(colRefUser);
+  };
+
   // useEffect(() => {
   //   const getUsers = async () => {
   //     const usersCollectionRef = doc(db, "users", currentUser.uid);
@@ -125,6 +240,7 @@ export function AuthProvider({ children }) {
 
         const getUsers = async () => {
           const data = await getDoc(usersCollectionRef);
+          // add , id: uid
           setUserName(data.data());
         };
 
@@ -141,8 +257,14 @@ export function AuthProvider({ children }) {
         const getAllUsers = async () => {
           const querySnapshot = await getDocs(collection(db, "users"));
           setAllUsers(
-            querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+            querySnapshot.docs.map((doc) => ({
+              id: doc.id,
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
+              email: doc.data().email,
+            }))
           );
+          // change to querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id, firstName: doc.data().firstName, lastName: doc.data().lastName, email: doc.data().email }))
 
           // this will order users by name
           setAllUsers((data) => {
@@ -169,6 +291,10 @@ export function AuthProvider({ children }) {
     allUsers,
     projects,
     singleProject,
+    tickets,
+    singleTicket,
+    currentUserTickets,
+    setSingleTicket,
     setAllUsers,
     login,
     logout,
@@ -182,6 +308,13 @@ export function AuthProvider({ children }) {
     getSingleProject,
     deleteMembers,
     addMembers,
+    addTickets,
+    getTickets,
+    deleteTickets,
+    addUserTickets,
+    setCurrentUserTickets,
+    getUserTickets,
+    deleteUserTickets,
   };
   return (
     <AuthContext.Provider value={value}>
