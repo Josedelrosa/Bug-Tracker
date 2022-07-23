@@ -25,6 +25,10 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import ProjectMembers from "./ProjectMembers";
 import ProjectTickets from "./ProjectTickets";
+import AccountMenu from "./AccountMenu";
+import TicketInfo from "./TicketInfo";
+import ChatRoom from "./ChatRoom";
+
 function Copyright(props) {
   return (
     <Typography
@@ -70,6 +74,7 @@ const Drawer = styled(MuiDrawer, {
     position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,
+    backgroundColor: "#243447",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -95,7 +100,11 @@ function DashboardContent() {
   const [open, setOpen] = React.useState(true);
   const [project, setProject] = useState([]);
   const { id } = useParams();
+  const { singleTicket, setSingleTicket } = useAuth();
 
+  useEffect(() => {
+    setSingleTicket([]);
+  }, []);
   // useEffect(() => {
   //   async function f1() {
   //     const docRef = doc(db, "projects", id);
@@ -113,7 +122,7 @@ function DashboardContent() {
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open}>
+        <AppBar position="absolute" open={open} sx={{ bgcolor: "#243447" }}>
           <Toolbar
             sx={{
               pr: "24px", // keep right padding when drawer closed
@@ -145,6 +154,7 @@ function DashboardContent() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+            <AccountMenu />
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -154,18 +164,16 @@ function DashboardContent() {
               alignItems: "center",
               justifyContent: "flex-end",
               px: [1],
+              backgroundColor: (theme) => theme.palette.grey[100],
             }}
           >
             <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
+              <ChevronLeftIcon sx={{ color: "#243447" }} />
             </IconButton>
           </Toolbar>
           <Divider />
-          <List component="nav">
-            {mainListItems}
-            <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
-          </List>
+          <List component="nav">{mainListItems}</List>
+          <Divider />
         </Drawer>
         <Box
           component="main"
@@ -182,7 +190,7 @@ function DashboardContent() {
           <Toolbar />
           <Container maxWidth="false" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* Chart */}
+              {/* ProjectTickets */}
               <Grid item xs={12} md={8} lg={7}>
                 <Paper
                   sx={{
@@ -193,10 +201,9 @@ function DashboardContent() {
                   }}
                 >
                   <ProjectTickets id={id} />
-                  {/* <Chart /> */}
                 </Paper>
               </Grid>
-              {/* Recent Deposits */}
+              {/* ProjectMembers */}
               <Grid item xs={12} md={4} lg={5}>
                 <Paper
                   sx={{
@@ -212,17 +219,57 @@ function DashboardContent() {
               </Grid>
               {/* Recent Orders */}
               <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
                   {/* <Orders /> */}
                   <Typography
                     component="h1"
                     variant="h6"
                     color="inherit"
                     noWrap
-                    sx={{ flexGrow: 1 }}
+                    sx={{ flexGrow: 1, fontWeight: 600, mb: 2 }}
                   >
                     Selected Ticket Info
                   </Typography>
+
+                  {singleTicket.ticketName ? (
+                    <>
+                      <Grid container spacing={2}>
+                        <Grid item xs={7}>
+                          <TicketInfo />
+                        </Grid>
+                        <Grid item xs={5}>
+                          <Paper
+                            sx={{
+                              p: 1,
+                            }}
+                          >
+                            <ChatRoom />
+                          </Paper>
+                        </Grid>
+                      </Grid>
+                    </>
+                  ) : (
+                    "No Ticket Info Selected"
+                  )}
+                  {/* {singleTicket.ticketName ? (
+                      <>
+                        <Grid item xs={5}>
+                          <TicketInfo />
+                        </Grid>
+                      </>
+                    ) : (
+                      "No Ticket Info Selected"
+                    )} */}
+
+                  {/* <Grid item xs={8}>
+                    <TicketInfo />
+                  </Grid> */}
                 </Paper>
               </Grid>
             </Grid>
