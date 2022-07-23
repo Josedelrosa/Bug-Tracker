@@ -10,6 +10,8 @@ import ForgotPassword from "./ForgotPassword";
 import UpdateProfile from "./UpdateProfile";
 import Dashboard from "./Dashboard/Dashboard";
 import SingleProject from "./Dashboard/SingleProject";
+import UserTickets from "./Dashboard/UserTickets";
+
 export default function Authentication() {
   return (
     <>
@@ -45,6 +47,14 @@ export default function Authentication() {
               element={
                 <PrivateRoute redirectTo="/login">
                   <SingleProject />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/tickets"
+              element={
+                <PrivateRoute redirectTo="/login">
+                  <UserTickets />
                 </PrivateRoute>
               }
             />
