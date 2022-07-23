@@ -10,9 +10,11 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
+import Tooltip from "@mui/material/Tooltip";
 import { Button } from "@mui/material";
 import { useAuth } from "../../contexts/AuthContext";
 import AddIcon from "@mui/icons-material/Add";
+import FormLabel from "@mui/material/FormLabel";
 function preventDefault(event) {
   event.preventDefault();
 }
@@ -34,11 +36,9 @@ export default function AddMembers({
   projectId,
   setCurrentMembers,
 }) {
-  const { allUsers, addMembers, getProjects } = useAuth();
+  const { allUsers, addMembers, getProjects, getTickets } = useAuth();
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
-  const projectNameRef = useRef();
-  const projectDescriptionRef = useRef();
   const [checked, setChecked] = useState([]);
   const [loading, setLoading] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -52,7 +52,7 @@ export default function AddMembers({
     const fullname = value.firstName + " " + value.lastName;
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
-    console.log(checked);
+
     if (currentIndex === -1) {
       newChecked.push(value);
     } else {
@@ -61,14 +61,14 @@ export default function AddMembers({
     // console.log(value);
     setChecked(newChecked);
   };
-  console.log(allUsers);
-  console.log(currentMembers);
-  console.log(
-    allUsers.filter(
-      (item) =>
-        !currentMembers.some((currentMembers) => currentMembers.id === item.id)
-    )
-  );
+  // console.log(allUsers);
+  // console.log(currentMembers);
+  // console.log(
+  //   allUsers.filter(
+  //     (item) =>
+  //       !currentMembers.some((currentMembers) => currentMembers.id === item.id)
+  //   )
+  // );
   // console.log(checked);
   // console.log(checked.length);
 
@@ -95,7 +95,9 @@ export default function AddMembers({
 
   return (
     <React.Fragment>
-      <AddIcon onClick={handleOpen} />
+      <Tooltip title="Add Members">
+        <AddIcon onClick={handleOpen} sx={{ color: "white" }} />
+      </Tooltip>
       <Modal
         open={open}
         onClose={handleClose}
@@ -118,7 +120,9 @@ export default function AddMembers({
                 </Alert>
               )}
               <div>
-                <h4>Add Team Members</h4>
+                <FormLabel sx={{ color: "black", fontWeight: "bold" }}>
+                  Add Team Members
+                </FormLabel>
                 <List
                   dense
                   sx={{
@@ -127,7 +131,9 @@ export default function AddMembers({
                     overflow: "auto",
                     maxHeight: 200,
                     bgcolor: "background.paper",
-                    border: 0,
+                    border: 1,
+                    borderRadius: "10px",
+                    marginBottom: 1,
                   }}
                 >
                   {allUsers

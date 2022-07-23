@@ -10,49 +10,42 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import LogoutIcon from "@mui/icons-material/Logout";
+import LibraryBooksSharpIcon from "@mui/icons-material/LibraryBooksSharp";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext.js";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useNavigate, NavLink, useLocation } from "react-router-dom";
 
 const navLinkStyles = ({ isActive }) => {
   return {
+    color: "white",
     fontWeight: isActive ? "bold" : "normal",
-    textDecoration: isActive ? "none" : "underline",
+    textDecoration: "none",
   };
 };
+
 export const mainListItems = (
   <div>
     <NavLink to={"/dashboard"} style={navLinkStyles}>
       <ListItem button>
-        <ListItemIcon>
+        <ListItemIcon sx={{ color: "white" }}>
           <DashboardIcon />
         </ListItemIcon>
-        <ListItemText primary="Dashboard" />
+        <ListItemText disableTypography primary="Dashboard" />
+      </ListItem>
+    </NavLink>
+    <NavLink to={"/tickets"} style={navLinkStyles}>
+      <ListItem button>
+        <ListItemIcon sx={{ color: "white" }}>
+          <LibraryBooksSharpIcon />
+        </ListItemIcon>
+        <ListItemText disableTypography primary="Tickets" />
       </ListItem>
     </NavLink>
     <ListItem button>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
+      <ListItemIcon sx={{ color: "white" }}>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Customers" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Integrations" />
+      <ListItemText primary="Customers" sx={{ color: "#FFFFFF" }} />
     </ListItem>
   </div>
 );
@@ -100,7 +93,7 @@ export default function LogoutButton() {
         button
         onClick={handleLogout}
         sx={{
-          bgcolor: "#B23B3B",
+          bgcolor: "#C51F5D",
           width: "70%",
           borderRadius: "12px",
           ml: "15%",

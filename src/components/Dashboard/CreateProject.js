@@ -4,6 +4,7 @@ import Link from "@mui/material/Link";
 import Alert from "@mui/material/Alert";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -90,7 +91,9 @@ export default function CreateProject() {
 
   return (
     <React.Fragment>
-      <AddIcon onClick={handleOpen} />
+      <Tooltip title="Create Project">
+        <AddIcon onClick={handleOpen} sx={{ color: "white" }} />
+      </Tooltip>
       <Modal
         open={open}
         onClose={handleClose}
@@ -115,8 +118,13 @@ export default function CreateProject() {
               <div>
                 <h4>Project Name</h4>
                 <TextField
+                  sx={{
+                    "& legend": { display: "none" },
+                    "& fieldset": { top: 0 },
+                    marginBottom: 1,
+                  }}
+                  placeholder="Enter Project Name"
                   id="outlined-multiline-static"
-                  label="Project Name"
                   multiline
                   rows={1}
                   defaultValue=""
@@ -127,8 +135,13 @@ export default function CreateProject() {
               <div>
                 <h4>Project Description</h4>
                 <TextField
+                  sx={{
+                    "& legend": { display: "none" },
+                    "& fieldset": { top: 0 },
+                    marginBottom: 1,
+                  }}
+                  placeholder="Enter Project Description"
                   id="outlined-multiline-static"
-                  label="Project Description"
                   multiline
                   rows={4}
                   defaultValue=""

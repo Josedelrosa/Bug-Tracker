@@ -39,6 +39,7 @@ export default function AccountMenu() {
       setError("Failed to log out");
     }
   }
+
   return (
     <React.Fragment>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>

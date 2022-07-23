@@ -22,6 +22,7 @@ import { visuallyHidden } from "@mui/utils";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import CreateProject from "./CreateProject";
+import { Divider } from "@mui/material";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -89,15 +90,20 @@ function EnhancedTableHead(props) {
 
   return (
     <TableHead>
-      <TableRow>
+      <TableRow sx={{ bgcolor: "#243447" }}>
         <TableCell padding="checkbox">
           <Checkbox
-            color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
               "aria-label": "select all projects",
+            }}
+            sx={{
+              color: "white",
+              "&.Mui-checked": {
+                color: "primary",
+              },
             }}
           />
         </TableCell>
@@ -107,12 +113,26 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            style={{ fontWeight: 550 }}
+            style={{ fontWeight: 600, fontSize: 16, color: "white" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
+              sx={{
+                "&.MuiTableSortLabel-root": {
+                  color: "white",
+                },
+                "&.MuiTableSortLabel-root:hover": {
+                  color: "white",
+                },
+                "&.Mui-active": {
+                  color: "white",
+                },
+                "& .MuiTableSortLabel-icon": {
+                  color: "white !important",
+                },
+              }}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -141,58 +161,59 @@ const EnhancedTableToolbar = (props) => {
   const { numSelected, projectNames } = props;
 
   return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-          style={{ fontWeight: 600 }}
-        >
-          Projects
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton
-            onClick={(e) => {
-              projectNames(e);
-            }}
+    <>
+      <Toolbar
+        sx={{
+          pl: { sm: 2 },
+          pr: { xs: 1, sm: 1 },
+          bgcolor: "#243447",
+          ...(numSelected > 0 && {
+            bgcolor: (theme) =>
+              alpha(
+                theme.palette.primary.main,
+                theme.palette.action.activatedOpacity
+              ),
+          }),
+        }}
+      >
+        {numSelected > 0 ? (
+          <Typography
+            sx={{ flex: "1 1 100%" }}
+            color="inherit"
+            variant="subtitle1"
+            component="div"
           >
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Create Project">
-          <IconButton>
+            {numSelected} selected
+          </Typography>
+        ) : (
+          <Typography
+            sx={{ flex: "1 1 100%", fontWeight: 600, color: "white" }}
+            variant="h6"
+            id="tableTitle"
+            component="div"
+          >
+            Projects
+          </Typography>
+        )}
+
+        {numSelected > 0 ? (
+          <Tooltip title="Delete">
+            <IconButton
+              onClick={(e) => {
+                projectNames(e);
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <IconButton disableFocusRipple>
             <CreateProject />
           </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
+        )}
+      </Toolbar>
+      <Divider />
+    </>
   );
 };
 
@@ -202,7 +223,7 @@ EnhancedTableToolbar.propTypes = {
 
 export default function Projects() {
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("id");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [error, setError] = useState("");
@@ -335,10 +356,15 @@ export default function Projects() {
                         id={labelId}
                         scope="row"
                         padding="none"
+                        sx={{ minWidth: 140 }}
                       >
                         <Link
-                          color="primary"
-                          underline="none"
+                          color="black"
+                          style={{
+                            textDecoration: "none",
+                            color: "black",
+                            fontWeight: 600,
+                          }}
                           to={`/dashboard/${row.id}`}
                         >
                           {row.id}

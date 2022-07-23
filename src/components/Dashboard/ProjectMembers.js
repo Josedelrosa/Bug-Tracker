@@ -155,6 +155,7 @@ const EnhancedTableToolbar = (props) => {
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
+        bgcolor: "#243447",
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
             alpha(
@@ -175,11 +176,10 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: "1 1 100%" }}
+          sx={{ flex: "1 1 100%", fontWeight: 600, color: "white" }}
           variant="h6"
           id="tableTitle"
           component="div"
-          style={{ fontWeight: 600 }}
         >
           Team
         </Typography>
@@ -196,15 +196,13 @@ const EnhancedTableToolbar = (props) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Add Members">
-          <IconButton>
-            <AddMembers
-              currentMembers={currentMembers}
-              projectId={projectId}
-              setCurrentMembers={setCurrentMembers}
-            />
-          </IconButton>
-        </Tooltip>
+        <IconButton>
+          <AddMembers
+            currentMembers={currentMembers}
+            projectId={projectId}
+            setCurrentMembers={setCurrentMembers}
+          />
+        </IconButton>
       )}
     </Toolbar>
   );
@@ -216,7 +214,7 @@ EnhancedTableToolbar.propTypes = {
 
 export default function ProjectMembers({ id }) {
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("firstName");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [error, setError] = useState("");
@@ -248,7 +246,7 @@ export default function ProjectMembers({ id }) {
     }
     setSelected([]);
   };
-
+  console.log(selected);
   async function deleteSelectedRows(e) {
     e.preventDefault();
     setLoading(true);
@@ -363,30 +361,15 @@ export default function ProjectMembers({ id }) {
                           }}
                         />
                       </TableCell>
-                      {/* <TableCell
-                        component="th"
-                        id={labelId}
+                      <TableCell
                         scope="row"
                         padding="none"
+                        sx={{ fontWeight: 600 }}
                       >
-                        <Link
-                          color="primary"
-                          underline="none"
-                          to={`/dashboard/${row.id}`}
-                        >
-                          {row.id}
-                        </Link>
-                      </TableCell> */}
-                      <TableCell align="left">
                         {row.firstName + " " + row.lastName}
                       </TableCell>
                       <TableCell align="left">{row.email}</TableCell>
                       <TableCell align="left">777-777-7777</TableCell>
-                      {/* {console.log(
-                        row.members.map(
-                          (value) => value.firstName + " " + value.lastName
-                        )
-                      )} */}
                     </TableRow>
                   );
                 })}

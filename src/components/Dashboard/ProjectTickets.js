@@ -17,8 +17,10 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import EditIcon from "@mui/icons-material/Edit";
 import Switch from "@mui/material/Switch";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import Link from "@mui/material/Link";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import { useAuth } from "../../contexts/AuthContext";
@@ -26,7 +28,7 @@ import { useState, useRef, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import AddTickets from "./AddTickets";
-
+import TicketInfo from "./TicketInfo";
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -59,22 +61,25 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "firstName",
+    id: "ticketName",
     numeric: false,
     disablePadding: true,
-    label: "Name",
+    label: "Ticket Title",
   },
   {
-    id: "email",
+    id: "ticketDescription",
     numeric: false,
     disablePadding: false,
-    label: "Email",
+    label: "Description",
   },
   {
-    id: "phone",
+    id: "createdBy",
     numeric: false,
     disablePadding: false,
-    label: "Phone",
+    label: "Ticket Author",
+  },
+  {
+    id: "edit",
   },
 ];
 
@@ -113,18 +118,22 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
             style={{ fontWeight: 550 }}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
+            {headCell.id !== "edit" && (
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            )}
           </TableCell>
         ))}
       </TableRow>
@@ -155,6 +164,7 @@ const EnhancedTableToolbar = (props) => {
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
+        bgcolor: "#243447",
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
             alpha(
@@ -175,13 +185,12 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: "1 1 100%" }}
+          sx={{ flex: "1 1 100%", fontWeight: 600, color: "white" }}
           variant="h6"
           id="tableTitle"
           component="div"
-          style={{ fontWeight: 600 }}
         >
-          Team
+          Tickets
         </Typography>
       )}
 
@@ -196,15 +205,13 @@ const EnhancedTableToolbar = (props) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Add Members">
-          <IconButton>
-            <AddTickets
-              currentMembers={currentMembers}
-              projectId={projectId}
-              setCurrentMembers={setCurrentMembers}
-            />
-          </IconButton>
-        </Tooltip>
+        <IconButton>
+          <AddTickets
+            currentMembers={currentMembers}
+            projectId={projectId}
+            setCurrentMembers={setCurrentMembers}
+          />
+        </IconButton>
       )}
     </Toolbar>
   );
@@ -216,24 +223,37 @@ EnhancedTableToolbar.propTypes = {
 
 export default function ProjectTickets({ id }) {
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("ticketName");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [project, setProject] = useState([]);
-  const { deleteMembers, getProjects } = useAuth();
+  // project refers to members in the project
+  const {
+    deleteMembers,
+    getProjects,
+    getTickets,
+    tickets,
+    deleteTickets,
+    deleteUserTickets,
+    setSingleTicket,
+  } = useAuth();
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   useEffect(() => {
     //this needs to change to const docRef = doc(db, "projects", id, tickets, ticketA);
     async function getProject() {
+      await getTickets(id);
       const docRef = doc(db, "projects", id);
       const docSnap = await getDoc(docRef);
       setProject(docSnap.data().members);
     }
     getProject();
   }, [id]);
+
+  // console.log(tickets);
+  // console.log(project);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -243,7 +263,7 @@ export default function ProjectTickets({ id }) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = project.map((n) => n);
+      const newSelecteds = tickets.map((n) => n);
       setSelected(newSelecteds);
       return;
     }
@@ -255,19 +275,20 @@ export default function ProjectTickets({ id }) {
     setLoading(true);
     for (let i of selected) {
       try {
+        console.log(i.userId);
         setError("");
-        await deleteMembers(id, i);
-        async function getProject() {
-          const docRef = doc(db, "projects", id);
-          const docSnap = await getDoc(docRef);
-          setProject(docSnap.data().members);
-        }
-        getProject();
+        await deleteTickets(id, i.id);
+        await deleteUserTickets(i.id, i.userId);
+        // async function getProject() {
+        //   await getTickets(id);
+        // }
+        // getProject();
       } catch (error) {
-        setError("Failed to delete members");
+        setError("Failed to delete tickets");
         console.log(error);
       }
     }
+    await getTickets(id);
     await getProjects();
     setLoading(false);
     setSelected([]);
@@ -307,9 +328,7 @@ export default function ProjectTickets({ id }) {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0
-      ? Math.max(0, (1 + page) * rowsPerPage - project.members.length)
-      : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tickets.length) : 0;
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -333,13 +352,13 @@ export default function ProjectTickets({ id }) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={project.length}
+              rowCount={tickets.length}
             />
 
             <TableBody>
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(project, getComparator(order, orderBy))
+              {stableSort(tickets, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row);
@@ -348,7 +367,6 @@ export default function ProjectTickets({ id }) {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -357,6 +375,7 @@ export default function ProjectTickets({ id }) {
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
+                          onClick={(event) => handleClick(event, row)}
                           color="primary"
                           checked={isItemSelected}
                           inputProps={{
@@ -364,29 +383,28 @@ export default function ProjectTickets({ id }) {
                           }}
                         />
                       </TableCell>
-                      {/* <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
+                      <TableCell scope="row" padding="none">
                         <Link
-                          color="primary"
+                          component="button"
                           underline="none"
-                          to={`/dashboard/${row.id}`}
+                          style={{ fontWeight: 600, color: "black" }}
+                          onClick={() => {
+                            setSingleTicket(row);
+                            console.info(row);
+                          }}
                         >
-                          {row.id}
+                          {row.ticketName}
                         </Link>
-                      </TableCell> */}
-                      <TableCell align="left">
-                        {row.firstName + " " + row.lastName}
                       </TableCell>
-                      <TableCell align="left">{row.email}</TableCell>
-                      {/* {console.log(
-                        row.members.map(
-                          (value) => value.firstName + " " + value.lastName
-                        )
-                      )} */}
+                      <TableCell align="left">
+                        {row.ticketDescription}
+                      </TableCell>
+                      <TableCell align="left">{row.createdBy}</TableCell>
+                      <TableCell align="left">
+                        <IconButton onClick={(e) => {}}>
+                          <EditIcon />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -405,7 +423,7 @@ export default function ProjectTickets({ id }) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={project.length}
+          count={tickets.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
