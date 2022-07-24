@@ -111,11 +111,12 @@ export default function AddTickets({ currentMembers, projectId }) {
   // console.log(checked.length);
 
   async function handleSubmit(e) {
+    e.preventDefault();
     const firstName = userName.firstName;
     const lastName = userName.lastName;
     const createdBy = firstName + " " + lastName;
     const ticketId = projectId + "" + ticketNameRef.current.value;
-    e.preventDefault();
+
     if (checked.length === 0) {
       return setError("No members where selected");
     }
@@ -179,8 +180,9 @@ export default function AddTickets({ currentMembers, projectId }) {
               // sx={{
               //   "& .MuiTextField-root": { m: 1, width: "45ch" },
               // }}
-              noValidate
+
               autoComplete="off"
+              onSubmit={handleSubmit}
             >
               {error && (
                 <Alert variant="outlined" severity="error">
@@ -281,11 +283,15 @@ export default function AddTickets({ currentMembers, projectId }) {
                       "& legend": { display: "none" },
                       "& fieldset": { top: 0 },
                     }}
+                    InputProps={{
+                      inputProps: {
+                        min: 0,
+                      },
+                    }}
                     id="outlined-basic"
                     placeholder="0"
                     fullWidth
                     rows={1}
-                    defaultValue=""
                     type="number"
                     inputRef={time}
                     required
@@ -369,7 +375,6 @@ export default function AddTickets({ currentMembers, projectId }) {
                 variant="contained"
                 type="submit"
                 disabled={loading}
-                onClick={handleSubmit}
               >
                 Submit
               </Button>

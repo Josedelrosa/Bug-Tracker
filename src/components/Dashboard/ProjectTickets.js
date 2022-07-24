@@ -28,6 +28,7 @@ import { useState, useRef, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import AddTickets from "./AddTickets";
+import EditTicket from "./EditTicket";
 import TicketInfo from "./TicketInfo";
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -401,8 +402,12 @@ export default function ProjectTickets({ id }) {
                       </TableCell>
                       <TableCell align="left">{row.createdBy}</TableCell>
                       <TableCell align="left">
-                        <IconButton onClick={(e) => {}}>
-                          <EditIcon />
+                        <IconButton>
+                          <EditTicket
+                            ticketInfo={row}
+                            currentMembers={project}
+                            projectId={id}
+                          />
                         </IconButton>
                       </TableCell>
                     </TableRow>

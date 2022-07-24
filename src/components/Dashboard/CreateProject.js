@@ -107,8 +107,8 @@ export default function CreateProject() {
               sx={{
                 "& .MuiTextField-root": { m: 1, width: "45ch" },
               }}
-              noValidate
               autoComplete="off"
+              onSubmit={handleSubmit}
             >
               {error && (
                 <Alert variant="outlined" severity="error">
@@ -127,7 +127,6 @@ export default function CreateProject() {
                   id="outlined-multiline-static"
                   multiline
                   rows={1}
-                  defaultValue=""
                   inputRef={projectNameRef}
                   required
                 />
@@ -186,11 +185,12 @@ export default function CreateProject() {
                   })}
                 </List>
               </div>
+
               <Button
                 variant="contained"
                 type="submit"
                 disabled={loading}
-                onClick={handleSubmit}
+                // onClick={handleSubmit}
               >
                 Submit
               </Button>

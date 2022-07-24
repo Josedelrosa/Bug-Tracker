@@ -77,6 +77,7 @@ export default function AddMembers({
     if (checked.length === 0) {
       return setError("No members where selected");
     }
+
     const mergeResult = [...currentMembers, ...checked];
 
     try {
@@ -173,7 +174,7 @@ export default function AddMembers({
               <Button
                 variant="contained"
                 type="submit"
-                disabled={loading}
+                disabled={currentMembers.length == allUsers.length || loading}
                 onClick={handleSubmit}
               >
                 Submit

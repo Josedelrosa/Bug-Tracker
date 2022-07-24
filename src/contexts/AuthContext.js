@@ -77,10 +77,18 @@ export function AuthProvider({ children }) {
   // create the project to add members
   const createProjects = async (projectName, projectDescription, members) => {
     // const [a] = members;
-    await setDoc(doc(db, "projects", projectName), {
-      projectDescription,
-      members,
-    });
+    const docRef = doc(db, "projects", projectName);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      await setDoc(docRef, {
+        projectDescription,
+        members,
+      });
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("Can't create duplicate Projects!");
+    }
   };
   const deleteProjects = async (projectName) => {
     await deleteDoc(doc(db, "projects", projectName));
@@ -151,18 +159,24 @@ export function AuthProvider({ children }) {
 
     const docRef = doc(db, "projects", projectName);
     const colRef = doc(docRef, "tickets", ticketId);
-    await setDoc(colRef, {
-      projectName,
-      ticketName,
-      ticketDescription,
-      time,
-      members,
-      type,
-      priority,
-      status,
-      createdBy,
-      userId,
-    });
+    const docSnap = await getDoc(colRef);
+
+    if (!docSnap.exists()) {
+      await setDoc(colRef, {
+        projectName,
+        ticketName,
+        ticketDescription,
+        time,
+        members,
+        type,
+        priority,
+        status,
+        createdBy,
+        userId,
+      });
+    } else {
+      console.log("Can't create duplicate Ticket with the same name!");
+    }
   };
   const deleteTickets = async (projectName, ticketId) => {
     const docRef = doc(db, "projects", projectName);
@@ -178,7 +192,86 @@ export function AuthProvider({ children }) {
       querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
     );
   };
+
+  const editTicket = async (
+    projectName,
+    ticketName,
+    ticketDescription,
+    time,
+    members,
+    type,
+    priority,
+    status,
+    createdBy,
+    userId,
+    ticketId
+  ) => {
+    const docRef = doc(db, "projects", projectName);
+    const colRef = doc(docRef, "tickets", ticketId);
+    await setDoc(colRef, {
+      projectName,
+      ticketName,
+      ticketDescription,
+      time,
+      members,
+      type,
+      priority,
+      status,
+      createdBy,
+      userId,
+    });
+  };
   const addUserTickets = async (
+    projectName,
+    ticketName,
+    ticketDescription,
+    time,
+    members,
+    type,
+    priority,
+    status,
+    createdBy,
+    userId,
+    ticketId
+  ) => {
+    const docRef = doc(db, "users", userId);
+    const colRef = doc(docRef, "tickets", ticketId);
+    const docSnap = await getDoc(colRef);
+
+    if (!docSnap.exists()) {
+      await setDoc(colRef, {
+        projectName,
+        ticketName,
+        ticketDescription,
+        time,
+        members,
+        type,
+        priority,
+        status,
+        createdBy,
+        createdAt: serverTimestamp(),
+      });
+    } else {
+      console.log("Cant Create Duplicate Ticket");
+    }
+  };
+
+  const getUserTickets = async (userID) => {
+    const querySnapshot = await getDocs(
+      collection(db, "users", userID, "tickets")
+    );
+    setCurrentUserTickets(
+      querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    );
+  };
+
+  const deleteUserTickets = async (ticketId, userId) => {
+    const docRefUser = doc(db, "users", userId);
+    const colRefUser = doc(docRefUser, "tickets", ticketId);
+    await deleteDoc(colRefUser);
+  };
+
+  const editUserTicket = async (
     projectName,
     ticketName,
     ticketDescription,
@@ -205,21 +298,6 @@ export function AuthProvider({ children }) {
       createdBy,
       createdAt: serverTimestamp(),
     });
-  };
-
-  const getUserTickets = async (userID) => {
-    const querySnapshot = await getDocs(
-      collection(db, "users", userID, "tickets")
-    );
-    setCurrentUserTickets(
-      querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-    );
-  };
-
-  const deleteUserTickets = async (ticketId, userId) => {
-    const docRefUser = doc(db, "users", userId);
-    const colRefUser = doc(docRefUser, "tickets", ticketId);
-    await deleteDoc(colRefUser);
   };
 
   // useEffect(() => {
@@ -311,10 +389,12 @@ export function AuthProvider({ children }) {
     addTickets,
     getTickets,
     deleteTickets,
+    editTicket,
     addUserTickets,
     setCurrentUserTickets,
     getUserTickets,
     deleteUserTickets,
+    editUserTicket,
   };
   return (
     <AuthContext.Provider value={value}>
