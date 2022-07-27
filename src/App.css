@@ -3,6 +3,12 @@
 Variables
 ===============
 */
+body {
+  background-position: center;
+  background-size: cover;
+  background-image: url("./background.jpg");
+  background-attachment: fixed;
+}
 
 .App {
   text-align: center;
