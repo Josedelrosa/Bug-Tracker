@@ -42,13 +42,14 @@ export function AuthProvider({ children }) {
   const [singleTicket, setSingleTicket] = useState([]);
   const [currentUserTickets, setCurrentUserTickets] = useState([]);
   // add email to signup
-  const signup = async (email, password, firstName, lastName) => {
+  const signup = async (email, password, firstName, lastName, phoneNumber) => {
     // return auth.createUserWithEmailAndPassword(email, password);
     const result = await createUserWithEmailAndPassword(auth, email, password);
     await setDoc(doc(db, "users", result.user.uid), {
       firstName,
       lastName,
       email,
+      phoneNumber,
     });
   };
   const login = async (email, password) => {
