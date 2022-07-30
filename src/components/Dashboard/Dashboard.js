@@ -18,12 +18,12 @@ import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { mainListItems, secondaryListItems } from "./listItems";
+import { mainListItems } from "./listItems";
 import LogoutButton from "./listItems";
 import Projects from "./Projects";
 import AccountMenu from "./AccountMenu";
-import Orders from "./Orders";
-import { useAuth } from "../../contexts/AuthContext";
+import DonutChart from "./DonutChart";
+
 function Copyright(props) {
   return (
     <Typography
@@ -93,6 +93,7 @@ const mdTheme = createTheme();
 
 function DashboardContent() {
   const [open, setOpen] = useState(true);
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -177,9 +178,9 @@ function DashboardContent() {
           }}
         >
           <Toolbar />
-          <Container sx={{ mt: 4, mb: 4 }}>
+          <Container sx={{ mt: 4, mb: 4 }} maxWidth="xl">
             <Grid container spacing={3}>
-              {/* Chart */}
+              {/* Project Table */}
               <Grid item xs={12}>
                 <Paper
                   sx={{
@@ -189,29 +190,11 @@ function DashboardContent() {
                   }}
                   elevation={12}
                 >
-                  {/* <Chart /> */}
                   <Projects />
                 </Paper>
               </Grid>
-              {/* Recent Deposits */}
-              {/* <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 240,
-                  }}
-                >
-                  <Name />
-                </Paper>
-              </Grid> */}
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  <Orders />
-                </Paper>
-              </Grid>
+              {/* Donut Chart */}
+              <DonutChart />
             </Grid>
             <Copyright sx={{ pt: 4 }} />
           </Container>

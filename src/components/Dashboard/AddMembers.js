@@ -132,8 +132,7 @@ export default function AddMembers({
                     overflow: "auto",
                     maxHeight: 200,
                     bgcolor: "background.paper",
-                    border: 1,
-                    borderRadius: "10px",
+                    border: "solid",
                     marginBottom: 1,
                   }}
                 >

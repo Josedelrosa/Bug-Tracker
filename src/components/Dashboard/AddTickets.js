@@ -316,7 +316,6 @@ export default function AddTickets({ currentMembers, projectId }) {
                     >
                       <MenuItem value={"Issue"}>Issue</MenuItem>
                       <MenuItem value={"Bug"}>Bug</MenuItem>
-                      <MenuItem value={"High"}>High</MenuItem>
                       <MenuItem value={"Error"}>Error</MenuItem>
                       <MenuItem value={"Feature Request"}>
                         Feature Request
@@ -343,6 +342,7 @@ export default function AddTickets({ currentMembers, projectId }) {
                       <MenuItem value={"Low"}>Low</MenuItem>
                       <MenuItem value={"Medium"}>Medium</MenuItem>
                       <MenuItem value={"High"}>High</MenuItem>
+                      <MenuItem value={"Urgent"}>High</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

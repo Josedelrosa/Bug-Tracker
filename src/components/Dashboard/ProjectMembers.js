@@ -16,13 +16,10 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import { Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import { useAuth } from "../../contexts/AuthContext";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import AddMembers from "./AddMembers";
@@ -369,7 +366,7 @@ export default function ProjectMembers({ id }) {
                         {row.firstName + " " + row.lastName}
                       </TableCell>
                       <TableCell align="left">{row.email}</TableCell>
-                      <TableCell align="left">777-777-7777</TableCell>
+                      <TableCell align="left">{row.phoneNumber}</TableCell>
                     </TableRow>
                   );
                 })}

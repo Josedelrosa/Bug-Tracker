@@ -1,7 +1,5 @@
 import React from "react";
 import {
-  doc,
-  getDoc,
   collection,
   query,
   orderBy,

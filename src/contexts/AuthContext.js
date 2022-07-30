@@ -16,12 +16,8 @@ import {
   deleteDoc,
   getDocs,
   collection,
-  orderBy,
-  query,
   updateDoc,
   arrayRemove,
-  arrayUnion,
-  addDoc,
   serverTimestamp,
 } from "firebase/firestore";
 
@@ -149,15 +145,6 @@ export function AuthProvider({ children }) {
     userId,
     ticketId
   ) => {
-    // await addDoc(
-    //   collection(db, `projects/${projectName}/tickets`, ticketName),
-    //   {
-    //     ticketDescription,
-    //   }
-    // );
-
-    // const messageRef = doc(db, `projects/${projectName}/tickets`, ticketName);
-
     const docRef = doc(db, "projects", projectName);
     const colRef = doc(docRef, "tickets", ticketId);
     const docSnap = await getDoc(colRef);
@@ -258,12 +245,15 @@ export function AuthProvider({ children }) {
   };
 
   const getUserTickets = async (userID) => {
-    const querySnapshot = await getDocs(
-      collection(db, "users", userID, "tickets")
-    );
-    setCurrentUserTickets(
-      querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-    );
+    const colRef = collection(db, "users", userID, "tickets");
+    const querySnapshot = await getDocs(colRef);
+
+    const theseTickets = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    setCurrentUserTickets(theseTickets);
+    // querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
   };
 
   const deleteUserTickets = async (ticketId, userId) => {
@@ -301,18 +291,10 @@ export function AuthProvider({ children }) {
     });
   };
 
-  // useEffect(() => {
-  //   const getUsers = async () => {
-  //     const usersCollectionRef = doc(db, "users", currentUser.uid);
-  //     const data = await getDoc(usersCollectionRef);
-  //     setUserName(data.data());
-  //   };
-  //   getUsers();
-  // }, []);
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
+
       if (user) {
         const uid = user.uid;
         const usersCollectionRef = doc(db, "users", uid);
@@ -323,16 +305,6 @@ export function AuthProvider({ children }) {
           setUserName(data.data());
         };
 
-        getUsers();
-
-        // const getProjects = async () => {
-        //   const querySnapshot = await getDocs(collection(db, "projects"));
-        //   setProjects(
-        //     querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-        //   );
-        // };
-        getProjects();
-
         const getAllUsers = async () => {
           const querySnapshot = await getDocs(collection(db, "users"));
           setAllUsers(
@@ -341,9 +313,9 @@ export function AuthProvider({ children }) {
               firstName: doc.data().firstName,
               lastName: doc.data().lastName,
               email: doc.data().email,
+              phoneNumber: doc.data().phoneNumber,
             }))
           );
-          // change to querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id, firstName: doc.data().firstName, lastName: doc.data().lastName, email: doc.data().email }))
 
           // this will order users by name
           setAllUsers((data) => {
@@ -351,12 +323,9 @@ export function AuthProvider({ children }) {
             dataToSort.sort((a, b) => a.firstName.localeCompare(b.firstName));
             return dataToSort;
           });
-
-          // querySnapshot.forEach((doc) => {
-          //   // doc.data() is never undefined for query doc snapshots
-          //   console.log(doc.id, " => ", doc.data());
-          // });
         };
+        getUsers();
+        getProjects();
         getAllUsers();
       }
 

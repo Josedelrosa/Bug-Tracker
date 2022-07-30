@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,8 +14,8 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import { visuallyHidden } from "@mui/utils";
 import { useAuth } from "../../contexts/AuthContext";
-import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import moment from "moment";
 
 function descendingComparator(a, b, orderBy) {
@@ -149,27 +148,13 @@ export default function UserTicketTable() {
   const [orderBy, setOrderBy] = React.useState("createdAt");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const {
-    deleteMembers,
-    getProjects,
-    getTickets,
-    tickets,
-    deleteTickets,
-    setSingleTicket,
-    getUserTickets,
-    currentUser,
-    currentUserTickets,
-  } = useAuth();
+  const { getUserTickets, currentUser, currentUserTickets } = useAuth();
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
-    //this needs to change to const docRef = doc(db, "projects", id, tickets, ticketA);
     const id = currentUser.uid;
     async function getTickets() {
       await getUserTickets(id);
-      //    const docRef = doc(db, "projects", id);
-      //    const docSnap = await getDoc(docRef);
-      //    setProject(docSnap.data().members);
     }
     getTickets();
   }, [currentUser.uid]);
