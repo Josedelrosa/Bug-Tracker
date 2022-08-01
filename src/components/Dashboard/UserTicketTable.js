@@ -174,11 +174,6 @@ export default function UserTicketTable() {
     setPage(0);
   };
 
-  // console.log(
-  //   currentUserTickets.map((value) =>
-  //     moment(value.createdAt.toDate()).fromNow()
-  //   )
-  // );
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0

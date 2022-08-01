@@ -254,7 +254,6 @@ export default function Projects() {
       try {
         setError("");
         await deleteProjects(i);
-        console.log(i);
       } catch (error) {
         setError("Failed to delete project");
         console.log(error);
@@ -380,11 +379,6 @@ export default function Projects() {
                           )
                         )}
                       </TableCell>
-                      {/* {console.log(
-                        row.members.map(
-                          (value) => value.firstName + " " + value.lastName
-                        )
-                      )} */}
                     </TableRow>
                   );
                 })}

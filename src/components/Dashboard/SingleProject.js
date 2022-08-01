@@ -18,13 +18,12 @@ import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { mainListItems, secondaryListItems } from "./listItems";
-import { useContext, useState, useEffect } from "react";
+import { mainListItems } from "./listItems";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../firebase";
 import ProjectMembers from "./ProjectMembers";
 import ProjectTickets from "./ProjectTickets";
+import LogoutButton from "./listItems";
 import AccountMenu from "./AccountMenu";
 import TicketInfo from "./TicketInfo";
 import ChatRoom from "./ChatRoom";
@@ -37,9 +36,9 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
+      {" © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Jose Del Rosario
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -105,15 +104,7 @@ function DashboardContent() {
   useEffect(() => {
     setSingleTicket([]);
   }, []);
-  // useEffect(() => {
-  //   async function f1() {
-  //     const docRef = doc(db, "projects", id);
-  //     const docSnap = await getDoc(docRef);
-  //     setProject(docSnap.data().members);
-  //   }
-  //   f1();
-  // }, []);
-  // console.log(project.map((value) => value.firstName + " " + value.lastName));
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -167,6 +158,28 @@ function DashboardContent() {
               backgroundColor: (theme) => theme.palette.grey[100],
             }}
           >
+            <Typography
+              component="h1"
+              variant="h6"
+              sx={{
+                textAlign: "center",
+                fontWeight: " bold",
+                marginRight: 2,
+              }}
+            >
+              <img
+                src={`https://www.gstatic.com/buganizer/img/v0/logo.svg`}
+                alt="bugtrackerImage"
+                style={{
+                  width: "22px",
+                  height: "22px",
+                  position: "relative",
+                  top: 4,
+                  marginRight: 6,
+                }}
+              />
+              Bug Tracker
+            </Typography>
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon sx={{ color: "#243447" }} />
             </IconButton>
@@ -174,6 +187,9 @@ function DashboardContent() {
           <Divider />
           <List component="nav">{mainListItems}</List>
           <Divider />
+          <List>
+            <LogoutButton />
+          </List>
         </Drawer>
         <Box
           component="main"
@@ -214,10 +230,9 @@ function DashboardContent() {
                   }}
                 >
                   <ProjectMembers id={id} />
-                  {/* <Deposits /> */}
                 </Paper>
               </Grid>
-              {/* Recent Orders */}
+
               <Grid item xs={12}>
                 <Paper
                   sx={{
@@ -226,7 +241,7 @@ function DashboardContent() {
                     flexDirection: "column",
                   }}
                 >
-                  {/* <Orders /> */}
+                  {/* Ticket Info and Chat Room /> */}
                   <Typography
                     component="h1"
                     variant="h6"
@@ -257,19 +272,6 @@ function DashboardContent() {
                   ) : (
                     "No Ticket Info Selected"
                   )}
-                  {/* {singleTicket.ticketName ? (
-                      <>
-                        <Grid item xs={5}>
-                          <TicketInfo />
-                        </Grid>
-                      </>
-                    ) : (
-                      "No Ticket Info Selected"
-                    )} */}
-
-                  {/* <Grid item xs={8}>
-                    <TicketInfo />
-                  </Grid> */}
                 </Paper>
               </Grid>
             </Grid>
@@ -280,16 +282,6 @@ function DashboardContent() {
     </ThemeProvider>
   );
 }
-
-// function SingleProject() {
-//   const { id } = useParams();
-//   console.log(id);
-//   return (
-//     <div>
-//       <h3>{id}</h3>
-//     </div>
-//   );
-// }
 
 export default function SingleProject() {
   return <DashboardContent />;

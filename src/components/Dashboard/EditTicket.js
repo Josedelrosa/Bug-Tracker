@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Alert from "@mui/material/Alert";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
@@ -20,11 +20,6 @@ import Select from "@mui/material/Select";
 import FormLabel from "@mui/material/FormLabel";
 import InputLabel from "@mui/material/InputLabel";
 import EditIcon from "@mui/icons-material/Edit";
-import TicketInfo from "./TicketInfo";
-
-function preventDefault(event) {
-  event.preventDefault();
-}
 
 const style = {
   position: "absolute",
@@ -38,22 +33,10 @@ const style = {
   p: 4,
 };
 
-const row = {
-  display: "flex",
-};
-
-const column = {
-  flex: "10%",
-  padding: "10px",
-};
-
 export default function EditTicket({ currentMembers, projectId, ticketInfo }) {
   const {
     getProjects,
-    addTickets,
-    userName,
     getTickets,
-    addUserTickets,
     getUserTickets,
     currentUser,
     editTicket,
@@ -95,31 +78,19 @@ export default function EditTicket({ currentMembers, projectId, ticketInfo }) {
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
-    // console.log(checked);
+
     if (currentIndex === -1) {
       newChecked.push(value);
     } else {
       newChecked.splice(currentIndex, 1);
     }
-    // console.log(value);
+
     setChecked(newChecked);
   };
-  // console.log(type);
-  // console.log(allUsers);
-  // console.log(currentMembers);
-  // console.log(
-  //   allUsers.filter(
-  //     (item) =>
-  //       !currentMembers.some((currentMembers) => currentMembers.id === item.id)
-  //   )
-  // );
-  // console.log(checked);
-  // console.log(checked.length);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const firstName = userName.firstName;
-    const lastName = userName.lastName;
+
     // const createdBy = firstName + " " + lastName;
     const createdBy = ticketInfo.createdBy;
     const ticketId = projectId + "" + ticketNameRef.current.value;

@@ -16,20 +16,15 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import EditIcon from "@mui/icons-material/Edit";
-import Switch from "@mui/material/Switch";
-// import { Link } from "react-router-dom";
 import Link from "@mui/material/Link";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import { useAuth } from "../../contexts/AuthContext";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import AddTickets from "./AddTickets";
 import EditTicket from "./EditTicket";
-import TicketInfo from "./TicketInfo";
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -232,7 +227,6 @@ export default function ProjectTickets({ id }) {
   const [project, setProject] = useState([]);
   // project refers to members in the project
   const {
-    deleteMembers,
     getProjects,
     getTickets,
     tickets,
@@ -252,9 +246,6 @@ export default function ProjectTickets({ id }) {
     }
     getProject();
   }, [id]);
-
-  // console.log(tickets);
-  // console.log(project);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -276,7 +267,6 @@ export default function ProjectTickets({ id }) {
     setLoading(true);
     for (let i of selected) {
       try {
-        console.log(i.userId);
         setError("");
         await deleteTickets(id, i.id);
         await deleteUserTickets(i.id, i.userId);
@@ -391,7 +381,6 @@ export default function ProjectTickets({ id }) {
                           style={{ fontWeight: 600, color: "black" }}
                           onClick={() => {
                             setSingleTicket(row);
-                            console.info(row);
                           }}
                         >
                           {row.ticketName}

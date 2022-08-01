@@ -27,7 +27,6 @@ export default function DonutChart() {
         ...doc.data(),
         id: doc.id,
       }));
-      console.log(theseTickets);
 
       if (theseTickets) {
         const type = [];

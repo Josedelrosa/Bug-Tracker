@@ -32,9 +32,9 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
+      {" © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Jose Del Rosario
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -154,6 +154,28 @@ function DashboardContent() {
               backgroundColor: (theme) => theme.palette.grey[100],
             }}
           >
+            <Typography
+              component="h1"
+              variant="h6"
+              sx={{
+                textAlign: "center",
+                fontWeight: " bold",
+                marginRight: 2,
+              }}
+            >
+              <img
+                src={`https://www.gstatic.com/buganizer/img/v0/logo.svg`}
+                alt="bugtrackerImage"
+                style={{
+                  width: "22px",
+                  height: "22px",
+                  position: "relative",
+                  top: 4,
+                  marginRight: 6,
+                }}
+              />
+              Bug Tracker
+            </Typography>
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon sx={{ color: "#243447" }} />
             </IconButton>

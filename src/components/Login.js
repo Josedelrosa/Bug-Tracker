@@ -22,9 +22,9 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
+      {" © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Jose Del Rosario
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -77,7 +77,7 @@ export default function Login() {
                   width: "40px",
                   height: "40px",
                   position: "relative",
-                  bottom: 3,
+                  top: 8,
                   marginRight: 8,
                 }}
               />

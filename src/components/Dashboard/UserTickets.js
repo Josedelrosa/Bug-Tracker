@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useParams } from "react-router-dom";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -18,16 +17,11 @@ import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { mainListItems, secondaryListItems } from "./listItems";
-import { useContext, useState, useEffect } from "react";
+import { mainListItems } from "./listItems";
+import { useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../firebase";
-import ProjectMembers from "./ProjectMembers";
-import ProjectTickets from "./ProjectTickets";
 import AccountMenu from "./AccountMenu";
 import LogoutButton from "./listItems";
-import TicketInfo from "./TicketInfo";
 import UserTicketTable from "./UserTicketTable";
 function Copyright(props) {
   return (
@@ -37,9 +31,9 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
+      {" © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Jose Del Rosario
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -98,21 +92,12 @@ const mdTheme = createTheme();
 
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
-  const [project, setProject] = useState([]);
-  const { singleTicket, setSingleTicket, userName } = useAuth();
+  const { setSingleTicket, userName } = useAuth();
 
   useEffect(() => {
     setSingleTicket([]);
   }, []);
-  // useEffect(() => {
-  //   async function f1() {
-  //     const docRef = doc(db, "projects", id);
-  //     const docSnap = await getDoc(docRef);
-  //     setProject(docSnap.data().members);
-  //   }
-  //   f1();
-  // }, []);
-  // console.log(project.map((value) => value.firstName + " " + value.lastName));
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -172,6 +157,28 @@ function DashboardContent() {
               backgroundColor: (theme) => theme.palette.grey[100],
             }}
           >
+            <Typography
+              component="h1"
+              variant="h6"
+              sx={{
+                textAlign: "center",
+                fontWeight: " bold",
+                marginRight: 2,
+              }}
+            >
+              <img
+                src={`https://www.gstatic.com/buganizer/img/v0/logo.svg`}
+                alt="bugtrackerImage"
+                style={{
+                  width: "22px",
+                  height: "22px",
+                  position: "relative",
+                  top: 4,
+                  marginRight: 6,
+                }}
+              />
+              Bug Tracker
+            </Typography>
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon sx={{ color: "#243447" }} />
             </IconButton>

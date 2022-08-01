@@ -243,7 +243,7 @@ export default function ProjectMembers({ id }) {
     }
     setSelected([]);
   };
-  console.log(selected);
+
   async function deleteSelectedRows(e) {
     e.preventDefault();
     setLoading(true);

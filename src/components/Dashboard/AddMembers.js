@@ -1,6 +1,5 @@
 import * as React from "react";
-import { useState, useRef, useEffect } from "react";
-import Link from "@mui/material/Link";
+import { useState } from "react";
 import Alert from "@mui/material/Alert";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
@@ -15,9 +14,6 @@ import { Button } from "@mui/material";
 import { useAuth } from "../../contexts/AuthContext";
 import AddIcon from "@mui/icons-material/Add";
 import FormLabel from "@mui/material/FormLabel";
-function preventDefault(event) {
-  event.preventDefault();
-}
 
 const style = {
   position: "absolute",
@@ -36,7 +32,7 @@ export default function AddMembers({
   projectId,
   setCurrentMembers,
 }) {
-  const { allUsers, addMembers, getProjects, getTickets } = useAuth();
+  const { allUsers, addMembers, getProjects } = useAuth();
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState([]);
@@ -49,7 +45,6 @@ export default function AddMembers({
   };
 
   const handleToggle = (value) => () => {
-    const fullname = value.firstName + " " + value.lastName;
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -58,19 +53,9 @@ export default function AddMembers({
     } else {
       newChecked.splice(currentIndex, 1);
     }
-    // console.log(value);
+
     setChecked(newChecked);
   };
-  // console.log(allUsers);
-  // console.log(currentMembers);
-  // console.log(
-  //   allUsers.filter(
-  //     (item) =>
-  //       !currentMembers.some((currentMembers) => currentMembers.id === item.id)
-  //   )
-  // );
-  // console.log(checked);
-  // console.log(checked.length);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -173,7 +158,7 @@ export default function AddMembers({
               <Button
                 variant="contained"
                 type="submit"
-                disabled={currentMembers.length == allUsers.length || loading}
+                disabled={currentMembers.length === allUsers.length || loading}
                 onClick={handleSubmit}
               >
                 Submit

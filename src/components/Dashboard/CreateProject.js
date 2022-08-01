@@ -1,9 +1,7 @@
 import * as React from "react";
-import { useState, useRef, useEffect } from "react";
-import Link from "@mui/material/Link";
+import { useState, useRef } from "react";
 import Alert from "@mui/material/Alert";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -16,10 +14,6 @@ import Checkbox from "@mui/material/Checkbox";
 import { Button } from "@mui/material";
 import { useAuth } from "../../contexts/AuthContext";
 import AddIcon from "@mui/icons-material/Add";
-import ProjectMembers from "./ProjectMembers";
-function preventDefault(event) {
-  event.preventDefault();
-}
 
 const style = {
   position: "absolute",
@@ -52,18 +46,15 @@ export default function CreateProject() {
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
-    console.log(checked);
+
     if (currentIndex === -1) {
       newChecked.push(value);
     } else {
       newChecked.splice(currentIndex, 1);
     }
-    // console.log(value);
+
     setChecked(newChecked);
   };
-  // console.log(allUsers);
-  // console.log(checked);
-  // console.log(checked.length);
 
   async function handleSubmit(e) {
     e.preventDefault();

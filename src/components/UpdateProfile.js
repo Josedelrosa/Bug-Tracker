@@ -22,9 +22,9 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
+      {" © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Jose Del Rosario
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -93,7 +93,7 @@ export default function UpdateProfile() {
                   width: "40px",
                   height: "40px",
                   position: "relative",
-                  bottom: 3,
+                  top: 8,
                   marginRight: 8,
                 }}
               />
@@ -142,7 +142,6 @@ export default function UpdateProfile() {
               />
               <TextField
                 margin="normal"
-                required
                 fullWidth
                 name="password"
                 label="Password"
@@ -154,12 +153,11 @@ export default function UpdateProfile() {
               />
               <TextField
                 margin="normal"
-                required
                 fullWidth
                 name="password"
                 label="Password"
                 type="password"
-                id="password"
+                id="confirmpassword"
                 autoComplete="current-password"
                 placeholder="Leave blank to keep the same"
                 inputRef={passwordConfirmRef}

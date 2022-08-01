@@ -97,16 +97,8 @@ export default function AccountMenu() {
           <Avatar />
           {userName ? firstName + " " + lastName : "loading"}
         </MenuItem>
-        <MenuItem>
-          <Avatar /> My account
-        </MenuItem>
+
         <Divider />
-        <MenuItem>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
 
         <MenuItem component={Link} to={"/update-profile"}>
           <ListItemIcon>
