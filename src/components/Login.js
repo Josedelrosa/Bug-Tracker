@@ -23,7 +23,7 @@ function Copyright(props) {
       {...props}
     >
       {" © "}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="https://jose-basic-portfolio.vercel.app/">
         Jose Del Rosario
       </Link>{" "}
       {new Date().getFullYear()}
