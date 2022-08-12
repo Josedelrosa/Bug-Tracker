@@ -14,10 +14,11 @@ import Checkbox from "@mui/material/Checkbox";
 import { Button } from "@mui/material";
 import { useAuth } from "../../contexts/AuthContext";
 import AddIcon from "@mui/icons-material/Add";
+import FormLabel from "@mui/material/FormLabel";
 
 const style = {
   position: "absolute",
-  top: "40%",
+  top: "44%",
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 600,
@@ -107,7 +108,9 @@ export default function CreateProject() {
                 </Alert>
               )}
               <div>
-                <h4>Project Name</h4>
+                <FormLabel sx={{ color: "black", fontWeight: "bold" }}>
+                  Project Name
+                </FormLabel>
                 <TextField
                   sx={{
                     "& legend": { display: "none" },
@@ -123,7 +126,9 @@ export default function CreateProject() {
                 />
               </div>
               <div>
-                <h4>Project Description</h4>
+                <FormLabel sx={{ color: "black", fontWeight: "bold" }}>
+                  Project Description
+                </FormLabel>
                 <TextField
                   sx={{
                     "& legend": { display: "none" },
@@ -140,7 +145,9 @@ export default function CreateProject() {
                 />
               </div>
               <div>
-                <h4>Add Team Members</h4>
+                <FormLabel sx={{ color: "black", fontWeight: "bold" }}>
+                  Add Team Members
+                </FormLabel>
                 <List
                   dense
                   sx={{
